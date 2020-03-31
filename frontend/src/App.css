@@ -1,0 +1,22 @@
+
+.wrapper {
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.div {
+  margin-top: 250px;
+  position: fixed;
+}
+
+.button {
+  width: 300px;
+}
+
+.listDiv {
+  margin-top: 15px;
+  position: fixed;
+}
+

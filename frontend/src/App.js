@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import banner from './assets/banner.jpg'
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {InputGroup, Button, FormControl, Table} from 'react-bootstrap'
 import Notification from './components/notification'
+import listsService from './services/lists'
 
 
 const App = () => {
@@ -14,19 +15,34 @@ const App = () => {
   const [itemList, setItemList] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [errorType, setErrorType] = useState(true);
+  const [lists, setLists] = useState([]);
+
+  useEffect(() => {
+    listsService
+      .getAll()
+      .then(initialLists => {
+        setLists(initialLists)
+      })
+  }, [])
 
 
   const handleCodeChange = (event) => {
     setOldList(event.target.value);
   }
   const lookForList = () => {
-    setErrorType(true)
-    setErrorMessage("Listaa koodilla " + oldList + " ei löytynyt!")
-    setTimeout(() => {
-      setErrorMessage(null)
-    }, 5000)
-    setOldList("")
 
+    const found = lists.some(el => el.id === oldList)
+
+    if(found){
+      setNewList(oldList)
+    }else{
+      setErrorType(true)
+      setErrorMessage("Listaa koodilla " + oldList + " ei löytynyt!")
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+      setOldList("")
+    }
   }
 
   const createNewList = () => {
@@ -77,6 +93,20 @@ const App = () => {
     )
  }
 
+ const saveList = (event) => {
+   event.preventDefault()
+   const listObject = {
+     content: itemList,
+     id: newList
+   }
+   console.log("king", listObject)
+   listsService
+          .create(listObject)
+          .then(returnedList => {
+          setLists(lists.concat(returnedList))
+          })
+ }
+
 
   if(newList === ""){
     return (
@@ -91,6 +121,7 @@ const App = () => {
             </InputGroup.Prepend>
           </InputGroup>
           <Button className="button" onClick={createNewList} variant="outline-secondary">Uusi ostoslista</Button>
+          <Button className="button" onClick={() => console.log("kong",lists)} variant="outline-secondary">kong</Button>
         </div>
       </div>
     )
@@ -105,6 +136,7 @@ const App = () => {
             <FormControl onChange={handleItemChange} aria-describedby="basic-addon1" value={newItem}/>
             <InputGroup.Prepend>
               <Button onClick={addItem} variant="outline-secondary">Lisää tuote</Button>
+              <Button onClick={saveList} variant="outline-secondary">Tallenna lista</Button>
             </InputGroup.Prepend>
           </InputGroup>
           <div className="listDiv">

@@ -20,9 +20,9 @@ app.get('/api/lists', (request, response) => {
   })
 })
 
-app.get('/api/lists/:id', (request, response) => {
+app.get('/api/lists/:code', (request, response) => {
   response.header('Access-Control-Allow-Origin', '*')
-  List.findById(request.params.id)
+  List.findById(request.params.code)
     .then(list => {
       if (list) {
         response.json(list.toJSON())
@@ -33,8 +33,8 @@ app.get('/api/lists/:id', (request, response) => {
     .catch(error => next(error))
 })
 
-app.delete('/api/lists/:id', (request, response) => {
-  List.findByIdAndRemove(request.params.id)
+app.delete('/api/lists/:code', (request, response) => {
+  List.findByIdAndRemove(request.params.code)
     // eslint-disable-next-line no-unused-vars
     .then(result => {
       response.status(204).end()
@@ -50,7 +50,7 @@ app.post('/api/lists', (request, response) => {
 
   const list = new List({
     content: body.content,
-    id: body.id
+    code: body.code
   })
 
   console.log('Attempting to post: ', list)
@@ -59,6 +59,19 @@ app.post('/api/lists', (request, response) => {
       .then(savedList => {
         response.json(savedList.toJSON())
       })
+
+})
+
+app.put('/api/lists/:code', async (request, response, next) => {
+  const body = request.body
+
+
+  List.findOneAndUpdate({code: request.params.code}, {$set:{content: body}}, {new: true, upsert: true}, (err, doc) => {
+    if(err) {
+      console.log("Jotai meni pielee")
+    }
+    console.log(doc)
+  });
 
 })
 

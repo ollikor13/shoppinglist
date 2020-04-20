@@ -1,14 +1,11 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Home from './components/home'
 import List from './components/list'
 
 
 const App = () => {
-  const padding = {
-    padding: 5
-  }
 
   return (
     <Router>
@@ -17,7 +14,7 @@ const App = () => {
         <Route exact path="/">
           <Home />
         </Route>
-        <Route exact path="/list/:id">
+        <Route exact path="/list/:code">
           <List />
         </Route>
       </Switch>

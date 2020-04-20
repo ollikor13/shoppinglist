@@ -9,17 +9,18 @@ const getAll = () => {
 }
 
 const create = newObject => {
+  console.log("kong",newObject)
   const request = axios.post(baseUrl, newObject)
   return request.then(response => response.data)
 }
 
-const update = (id, newObject) => {
-  const request = axios.put(`${baseUrl}/${id}`, newObject)
+const update = (code, newObject) => {
+  const request = axios.put(`${baseUrl}/${code}`, newObject)
   return request.then(response => response.data)
 }
 
-const dele = (id) => {
-    const deleUrl = baseUrl + "/" + id
+const dele = (code) => {
+    const deleUrl = baseUrl + "/" + code
     axios.delete(deleUrl)
 }
 export default { getAll, create, update, dele }

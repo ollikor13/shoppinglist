@@ -10,7 +10,6 @@ import { useHistory } from "react-router-dom";
 const Home = () => {
 
   const [oldList, setOldList] = useState("");
-  const [newList, setNewList] = useState("");
   const [errorMessage, setErrorMessage] = useState('');
   const [errorType, setErrorType] = useState(true);
   const [lists, setLists] = useState([]);
@@ -30,10 +29,11 @@ const Home = () => {
 
   const lookForList = () => {
 
-    const found = lists.some(el => el.id === oldList)
+    const found = lists.some(el => el.code === oldList)
 
     if(found){
-      setNewList(oldList)
+      let code = oldList
+      history.push(`/list/${code}`)
     }else{
       setErrorType(true)
       setErrorMessage("Listaa koodilla " + oldList + " ei löytynyt!")
@@ -45,9 +45,15 @@ const Home = () => {
   }
 
   const createNewList = () => {
-    let id = makeid(5)
-    setNewList(id)
-    history.push(`/list/${id}`)
+    let code = makeid(5)
+
+    const listObject = {
+      content: [],
+      code: code
+    }
+    listsService
+    .create(listObject)
+    history.push(`/list/${code}`)
   }
 
   const makeid = (length) => {

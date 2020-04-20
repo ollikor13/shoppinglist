@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {InputGroup, Button, FormControl, Table} from 'react-bootstrap'
 import Notification from './notification'
 import banner from '../assets/banner.jpg'
@@ -15,31 +15,66 @@ const List = () => {
   const [newList, setNewList] = useState("");
   const history = useHistory();
 
-  let id = useParams().id
+  useEffect(() => {
+    listsService
+      .getAll()
+      .then(initialLists => {
+        setLists(initialLists)
+      })
+  }, [])
+
+  let code = useParams().code
   if(newList === ""){
-    setNewList(id)
+    setNewList(code)
+  }
+
+  const deleteItem = (item) => {
+
+    
+    let list = lists.find(el => el.code = newList);
+
+    let templist = list.content;
+    let index = templist.indexOf(item);
+    templist.splice(index, 1)
+    setItemList(templist)
+
+    listsService
+    .update(newList, templist)
   }
 
 
   const renderList = () => {
-    let list = itemList;
-     return(
-       <div>
-         <Table striped bordered hover>
-           <tbody>
-             {list.map(item => <tr key={item}><td>{item}</td></tr>)}
-           </tbody>
-         </Table>
-       </div>
-     )
+    let list = lists.find(el => el.code = newList);
+    if(list){
+      return(
+        <div>
+          <Table striped bordered hover>
+            <tbody>
+              {list.content.map(item => <tr key={item}><td onClick={() => deleteItem(item)}>X</td><td>{item}</td></tr>)}
+            </tbody>
+          </Table>
+        </div>
+      )
+    }else{
+      return(
+        <div>
+          <p>Lataa</p>
+        </div>
+      )
+    }
   }
 
   const addItem = () => {
-    let list = itemList;
-    if(!list.includes(newItem)){
-      list.push(newItem)
-      setItemList(list)
+    let list = lists.find(el => el.code = newList);
+
+    let templist = list.content;
+
+    if(!templist.includes(newItem)){
+      templist.push(newItem)
+      setItemList(templist)
       setNewitem("")
+      listsService
+      .update(newList, templist)
     }else{
       setErrorType(true)
       setErrorMessage("Listasta löytyi jo tuote " + newItem)
@@ -58,9 +93,8 @@ const List = () => {
     event.preventDefault()
     const listObject = {
       content: itemList,
-      id: newList
+      code: newList
     }
-    console.log("king", listObject)
     listsService
            .create(listObject)
            .then(returnedList => {

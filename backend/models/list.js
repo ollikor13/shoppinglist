@@ -18,7 +18,7 @@ mongoose
 
 const listSchema = new mongoose.Schema({
   content: { type: Array, required: true},
-  id: { type: String, required: true}
+  code: { type: String, required: true}
 })
 
 listSchema.set('toJSON', {

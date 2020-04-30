@@ -53,6 +53,9 @@ const Home = () => {
     }
     listsService
     .create(listObject)
+    .then(returnlist => {
+      console.log("Returnlist", returnlist)
+    })
     history.push(`/list/${code}`)
   }
 
@@ -77,7 +80,7 @@ const Home = () => {
             </InputGroup.Prepend>
           </InputGroup>
           <Button className="button" onClick={createNewList} variant="outline-secondary">Uusi ostoslista</Button>
-          <Button className="button" onClick={() => console.log("kong",lists)} variant="outline-secondary">kong</Button>
+          <Button className="button" onClick={() => console.log("Lists",lists)} variant="outline-secondary">Debug</Button>
         </div>
       </div>
   )

@@ -45,12 +45,17 @@ const List = () => {
 
   const renderList = () => {
     let list = lists.find(el => el.code = newList);
+    console.log("kaikki listat", lists)
+
+    //console.log(lists, list)
+
     if(list){
+      let content = list.content
       return(
         <div>
           <Table striped bordered hover>
             <tbody>
-              {list.content.map(item => <tr key={item}><td onClick={() => deleteItem(item)}>X</td><td>{item}</td></tr>)}
+              {content.map(item => <tr key={item}><td onClick={() => deleteItem(item)}>X</td><td>{item}</td></tr>)}
             </tbody>
           </Table>
         </div>
@@ -58,7 +63,6 @@ const List = () => {
     }else{
       return(
         <div>
-          <p>Lataa</p>
         </div>
       )
     }
@@ -66,8 +70,13 @@ const List = () => {
 
   const addItem = () => {
     let list = lists.find(el => el.code = newList);
+    let templist
 
-    let templist = list.content;
+    if(list.content === undefined){
+      templist = []
+    }else{
+      templist = list.content;
+    }
 
     if(!templist.includes(newItem)){
       templist.push(newItem)
@@ -96,7 +105,7 @@ const List = () => {
       code: newList
     }
     listsService
-           .create(listObject)
+           .update(newList, listObject)
            .then(returnedList => {
            setLists(lists.concat(returnedList))
            })

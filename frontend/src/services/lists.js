@@ -4,12 +4,12 @@ const baseUrl = 'http://localhost:3001/api/lists'
 const getAll = () => {
   const request = axios.get(baseUrl)
   return request.then(response => {
+    console.log("frontend responsedata", response.data)
     return response.data
   })
 }
 
 const create = newObject => {
-  console.log("kong",newObject)
   const request = axios.post(baseUrl, newObject)
   return request.then(response => response.data)
 }

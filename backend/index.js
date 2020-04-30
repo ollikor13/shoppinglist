@@ -13,10 +13,10 @@ app.get('/', (req, res) => {
 })
 
 app.get('/api/lists', (request, response) => {
-  console.log("Kaikki haettiin")
   response.header('Access-Control-Allow-Origin', '*')
   List.find({}).then(lists => {
     response.json(lists)
+    console.log("Kaikki haettiin", lists)
   })
 })
 
